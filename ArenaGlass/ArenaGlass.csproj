@@ -8,4 +8,9 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="UI-Components/**" />
+    <None Include="UI-Components/**" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,6 @@
 ﻿using ArenaGlass.Models;
 using ArenaGlass.Services;
+using ArenaGlass.UI;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,23 +8,84 @@ using System.Threading.Tasks;
 namespace ArenaGlass;
 
 /// <summary>
-/// ArenaGlass MVP - MTG Arena Deck Tracker Console Application
+/// ArenaGlass MVP - MTG Arena Deck Tracker
 /// 
-/// This is the core implementation that demonstrates the MVP functionality:
+/// This implementation demonstrates the complete MVP functionality including:
 /// - Game state detection (MTG Arena process monitoring)
 /// - Log file monitoring and parsing
 /// - Real-time deck tracking
 /// - Library card management
+/// - UI service architecture (ready for WPF)
+/// - Both console and UI modes
 /// </summary>
 class Program
 {
-    private static GameMonitorService? _gameMonitor;
-    private static LogParserService? _logParser;
-    private static CardTrackingService? _cardTracker;
-    private static bool _isRunning = true;
-
+    [STAThread]
     static async Task Main(string[] args)
     {
+        Console.WriteLine("ArenaGlass MVP - Choose Interface Mode:");
+        Console.WriteLine("1. Console Mode (Original)");
+        Console.WriteLine("2. UI Demo Mode (Shows UI MVP features)");
+        Console.WriteLine();
+
+        // Check command line args or prompt user
+        string mode = "";
+        if (args.Length > 0)
+        {
+            mode = args[0].ToLower();
+        }
+        else
+        {
+            Console.Write("Enter mode (console/ui) [ui]: ");
+            mode = Console.ReadLine()?.Trim().ToLower() ?? "ui";
+        }
+
+        switch (mode)
+        {
+            case "console":
+            case "c":
+                await RunConsoleMode();
+                break;
+            case "ui":
+            case "u":
+            case "":
+            default:
+                await RunUIMode();
+                break;
+        }
+    }
+
+    private static async Task RunUIMode()
+    {
+        var uiService = new UIService();
+        try
+        {
+            await uiService.RunUIAsync();
+        }
+        finally
+        {
+            uiService.Cleanup();
+        }
+
+        Console.WriteLine("\nPress any key to exit UI demo...");
+        try
+        {
+            Console.ReadKey();
+        }
+        catch
+        {
+            // Handle case where console input is redirected
+            Console.WriteLine("Demo completed successfully!");
+        }
+    }
+
+    public static async Task RunConsoleMode()
+    {
+        var _gameMonitor = default(GameMonitorService);
+        var _logParser = default(LogParserService);
+        var _cardTracker = default(CardTrackingService);
+        var _isRunning = true;
+
         Console.WriteLine("=================================");
         Console.WriteLine("    ArenaGlass MVP - Console Demo");
         Console.WriteLine("  MTG Arena Deck Tracker v1.0");
@@ -49,7 +111,7 @@ class Program
         Console.WriteLine();
 
         // Start the command loop
-        await RunCommandLoop();
+        await RunCommandLoop(_gameMonitor, _logParser, _cardTracker, () => _isRunning, (running) => _isRunning = running);
 
         // Cleanup
         _gameMonitor?.StopMonitoring();
@@ -58,9 +120,9 @@ class Program
         Console.WriteLine("\nArenaGlass stopped. Goodbye!");
     }
 
-    private static async Task RunCommandLoop()
+    private static async Task RunCommandLoop(GameMonitorService gameMonitor, LogParserService logParser, CardTrackingService cardTracker, Func<bool> isRunning, Action<bool> setRunning)
     {
-        while (_isRunning)
+        while (isRunning())
         {
             Console.Write("ArenaGlass> ");
             var input = Console.ReadLine()?.Trim().ToLower();
@@ -76,35 +138,35 @@ class Program
             {
                 case "start":
                     Console.WriteLine("Starting MTG Arena monitoring...");
-                    _gameMonitor?.StartMonitoring();
+                    gameMonitor?.StartMonitoring();
                     break;
 
                 case "stop":
                     Console.WriteLine("Stopping monitoring...");
-                    _gameMonitor?.StopMonitoring();
+                    gameMonitor?.StopMonitoring();
                     break;
 
                 case "demo":
                     Console.WriteLine("Running demo with sample cards...");
-                    _logParser?.SimulateDeckParsing();
+                    logParser?.SimulateDeckParsing();
                     await Task.Delay(2000);
                     
                     // Simulate some card draws
                     Console.WriteLine("\nSimulating card draws...");
                     await Task.Delay(1000);
-                    _logParser?.SimulateCardDraw("Lightning Bolt");
+                    logParser?.SimulateCardDraw("Lightning Bolt");
                     await Task.Delay(1000);
-                    _logParser?.SimulateCardDraw("Island");
+                    logParser?.SimulateCardDraw("Island");
                     await Task.Delay(1000);
-                    _logParser?.SimulateCardDraw("Lightning Bolt");
+                    logParser?.SimulateCardDraw("Lightning Bolt");
                     await Task.Delay(1000);
-                    _logParser?.SimulateCardDraw("Counterspell");
+                    logParser?.SimulateCardDraw("Counterspell");
                     break;
 
                 case "draw":
                     if (!string.IsNullOrEmpty(argument))
                     {
-                        _logParser?.SimulateCardDraw(argument);
+                        logParser?.SimulateCardDraw(argument);
                     }
                     else
                     {
@@ -113,16 +175,16 @@ class Program
                     break;
 
                 case "clear":
-                    _cardTracker?.ClearDeck();
+                    cardTracker?.ClearDeck();
                     break;
 
                 case "status":
-                    ShowStatus();
+                    ShowStatus(cardTracker);
                     break;
 
                 case "quit":
                 case "exit":
-                    _isRunning = false;
+                    setRunning(false);
                     break;
 
                 case "help":
@@ -152,12 +214,12 @@ class Program
         Console.Write("ArenaGlass> ");
     }
 
-    private static void ShowStatus()
+    private static void ShowStatus(CardTrackingService? cardTracker)
     {
         Console.WriteLine("\n=== ArenaGlass Status ===");
         
-        var cardCount = _cardTracker?.GetTotalCardCount() ?? 0;
-        var uniqueCards = _cardTracker?.GetRemainingCards().Count ?? 0;
+        var cardCount = cardTracker?.GetTotalCardCount() ?? 0;
+        var uniqueCards = cardTracker?.GetRemainingCards().Count ?? 0;
         
         Console.WriteLine($"Library: {cardCount} total cards, {uniqueCards} unique");
         Console.WriteLine("Monitoring: Active");
