@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ArenaGlass.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c90719a74a05f70d1a340b68ad62f86a43b52a2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+43a138cb27e187004a400e9b450b3df311c708c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ArenaGlass.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ArenaGlass.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
