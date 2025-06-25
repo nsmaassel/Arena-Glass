@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "gBgCMdmBu0RD5dMlEYXviiLRYeKG1g1+QfE59EMrb7DqneyRPQOxAOHPmdm/WXULgCpU5Ao5n5CPDkmmTgypeg==",
+  "success": true,
+  "projectFilePath": "/home/runner/work/Arena-Glass/Arena-Glass/ArenaGlass.Core/ArenaGlass.Core.csproj",
+  "expectedPackageFiles": [
+    "/home/runner/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/home/runner/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

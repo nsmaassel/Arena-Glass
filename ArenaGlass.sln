@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArenaGlass.Core", "ArenaGlass.Core\ArenaGlass.Core.csproj", "{FC678E78-AAFB-4641-8E0A-BEBDF4F6C245}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArenaGlass.UI", "ArenaGlass.UI\ArenaGlass.UI.csproj", "{98419F13-0A14-4960-82DD-B786F7B70349}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArenaGlass.Tests", "ArenaGlass.Tests\ArenaGlass.Tests.csproj", "{BB32605F-29FF-42A5-940C-7B700315989F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC678E78-AAFB-4641-8E0A-BEBDF4F6C245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC678E78-AAFB-4641-8E0A-BEBDF4F6C245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC678E78-AAFB-4641-8E0A-BEBDF4F6C245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC678E78-AAFB-4641-8E0A-BEBDF4F6C245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98419F13-0A14-4960-82DD-B786F7B70349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98419F13-0A14-4960-82DD-B786F7B70349}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98419F13-0A14-4960-82DD-B786F7B70349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98419F13-0A14-4960-82DD-B786F7B70349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB32605F-29FF-42A5-940C-7B700315989F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB32605F-29FF-42A5-940C-7B700315989F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB32605F-29FF-42A5-940C-7B700315989F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB32605F-29FF-42A5-940C-7B700315989F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
