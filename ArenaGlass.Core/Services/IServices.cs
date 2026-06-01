@@ -2,7 +2,7 @@ using ArenaGlass.Core.Models;
 
 namespace ArenaGlass.Core.Services;
 
-public interface IGameMonitorService
+public interface IGameMonitorService : IDisposable
 {
     bool IsMtgArenaRunning { get; }
     event EventHandler<bool>? GameStateChanged;
@@ -10,7 +10,7 @@ public interface IGameMonitorService
     void StopMonitoring();
 }
 
-public interface ILogParserService
+public interface ILogParserService : IDisposable
 {
     event EventHandler<GameEvent>? GameEventParsed;
     Task StartParsingAsync(CancellationToken cancellationToken = default);

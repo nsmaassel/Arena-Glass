@@ -56,11 +56,12 @@ public class CardTrackingService : ICardTrackingService
     public void Reset()
     {
         _logger.LogInformation("Resetting card tracking state");
-        CurrentGameState = new GameState
-        {
-            IsGameActive = false
-        };
-        InitializeSampleLibrary();
+        var resetState = new GameState { IsGameActive = false };
+        resetState.Library = BuildSampleLibrary();
+        resetState.TotalCardsInLibrary = resetState.Library.Sum(c => c.Count);
+        CurrentGameState = resetState;
+        _logger.LogInformation("Initialized sample library with {Count} cards",
+            CurrentGameState.TotalCardsInLibrary);
     }
 
     private void ProcessDrawEvent(GameEvent gameEvent)
@@ -69,8 +70,7 @@ public class CardTrackingService : ICardTrackingService
         var availableCards = CurrentGameState.Library.Where(c => c.Count > 0).ToList();
         if (availableCards.Any())
         {
-            var random = new Random();
-            var cardToReduce = availableCards[random.Next(availableCards.Count)];
+            var cardToReduce = availableCards[Random.Shared.Next(availableCards.Count)];
             cardToReduce.Count--;
             
             if (cardToReduce.Count <= 0)
@@ -95,22 +95,44 @@ public class CardTrackingService : ICardTrackingService
     private void ProcessLogEvent(GameEvent gameEvent)
     {
         // Process general log events
+        bool isGameActive = CurrentGameState.IsGameActive;
+
         if (gameEvent.Data.Contains("Game Start"))
         {
-            CurrentGameState.IsGameActive = true;
+            isGameActive = true;
             _logger.LogInformation("Game started");
         }
         else if (gameEvent.Data.Contains("Game End"))
         {
-            CurrentGameState.IsGameActive = false;
+            isGameActive = false;
             _logger.LogInformation("Game ended");
+        }
+
+        if (isGameActive != CurrentGameState.IsGameActive)
+        {
+            CurrentGameState = new GameState
+            {
+                Library = CurrentGameState.Library,
+                TotalCardsInLibrary = CurrentGameState.TotalCardsInLibrary,
+                IsGameActive = isGameActive
+            };
         }
     }
 
     private void InitializeSampleLibrary()
     {
-        // Initialize with a sample library for demonstration
-        var sampleCards = new List<Card>
+        var sampleCards = BuildSampleLibrary();
+        CurrentGameState.Library = sampleCards;
+        CurrentGameState.TotalCardsInLibrary = sampleCards.Sum(c => c.Count);
+        CurrentGameState.IsGameActive = false;
+        
+        _logger.LogInformation("Initialized sample library with {Count} cards", 
+            CurrentGameState.TotalCardsInLibrary);
+    }
+
+    private static List<Card> BuildSampleLibrary()
+    {
+        return new List<Card>
         {
             new Card { Name = "Lightning Bolt", Count = 4, ManaCost = "R", Type = "Instant" },
             new Card { Name = "Counterspell", Count = 4, ManaCost = "1U", Type = "Instant" },
@@ -123,12 +145,5 @@ public class CardTrackingService : ICardTrackingService
             new Card { Name = "Swamp", Count = 8, ManaCost = "", Type = "Basic Land" },
             new Card { Name = "Plains", Count = 8, ManaCost = "", Type = "Basic Land" }
         };
-
-        CurrentGameState.Library = sampleCards;
-        CurrentGameState.TotalCardsInLibrary = sampleCards.Sum(c => c.Count);
-        CurrentGameState.IsGameActive = false;
-        
-        _logger.LogInformation("Initialized sample library with {Count} cards", 
-            CurrentGameState.TotalCardsInLibrary);
     }
 }
